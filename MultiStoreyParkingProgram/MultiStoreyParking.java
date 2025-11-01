@@ -1,63 +1,64 @@
+//This is just a small practice project for java
+
 import java.util.*;
 
-// Enum for vehicle types
-enum VehicleType {
-    BIKE, CAR, TRUCK
+enum VehicleType{
+    BIKE,
+    CAR,
+    TRUCK
 }
 
-// Enum for spot status
-enum SpotStatus {
-    AVAILABLE, OCCUPIED
+enum SpotStatus{
+    AVAILABLE,
+    OCCUPIED
 }
 
-// Vehicle class
-class Vehicle {
+class Vehicle{
     private String licensePlate;
     private VehicleType type;
 
-    public Vehicle(String licensePlate, VehicleType type) {
+    public Vehicle(String licensePlate, VehicleType type){
         this.licensePlate = licensePlate;
         this.type = type;
     }
 
-    public String getLicensePlate() {
+    public String getLicensePlate(){
         return licensePlate;
     }
 
-    public VehicleType getType() {
+    public VehicleType getType(){
         return type;
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return type + " (" + licensePlate + ")";
     }
 }
 
-// ParkingSpot class
-class ParkingSpot {
+class ParkingSpot{
     private int spotNumber;
-    private VehicleType allowedType;
+    private VehicleType allowerdType;
     private SpotStatus status;
     private Vehicle parkedVehicle;
 
-    public ParkingSpot(int spotNumber, VehicleType allowedType) {
+    public ParkingSpot(int spotNumber, VehicleType allowedType){
         this.spotNumber = spotNumber;
-        this.allowedType = allowedType;
+        this.allowerdType = allowedType;
         this.status = SpotStatus.AVAILABLE;
         this.parkedVehicle = null;
     }
 
-    public boolean isAvailable() {
+    public boolean isAvalaible(){
         return status == SpotStatus.AVAILABLE;
     }
 
-    public boolean canFitVehicle(VehicleType vehicleType) {
-        return allowedType == vehicleType;
+    public boolean canFitVehicle(VehicleType vehicleType){
+        return allowerdType == vehicleType;
     }
 
-    public boolean parkVehicle(Vehicle vehicle) {
-        if (isAvailable() && canFitVehicle(vehicle.getType())) {
+    public boolean parkVehicle(Vehicle vehicle){
+        if(isAvalaible() && canFitVehicle(vehicle.getType())){
             this.parkedVehicle = vehicle;
             this.status = SpotStatus.OCCUPIED;
             return true;
@@ -65,8 +66,8 @@ class ParkingSpot {
         return false;
     }
 
-    public Vehicle unparkVehicle() {
-        if (status == SpotStatus.OCCUPIED) {
+    public Vehicle unparkVehicle(){
+        if(status == SpotStatus.OCCUPIED){
             Vehicle vehicle = this.parkedVehicle;
             this.parkedVehicle = null;
             this.status = SpotStatus.AVAILABLE;
@@ -75,100 +76,94 @@ class ParkingSpot {
         return null;
     }
 
-    public int getSpotNumber() {
+    public int getSpotNumeber(){
         return spotNumber;
     }
 
-    public VehicleType getAllowedType() {
-        return allowedType;
+    public VehicleType getAllowedType(){
+        return allowerdType;
     }
 
-    public Vehicle getParkedVehicle() {
+    public Vehicle getParkedVehicle(){
         return parkedVehicle;
     }
 
     @Override
-    public String toString() {
-        return "Spot " + spotNumber + " [" + allowedType + "] - " + status;
+    public String toString(){
+        return "Spot " + spotNumber + " [" + allowerdType + "] - " + status;
     }
 }
 
-// ParkingFloor class
-class ParkingFloor {
+class ParkingFloor{
     private int floorNumber;
     private ArrayList<ParkingSpot> spots;
 
-    public ParkingFloor(int floorNumber, int bikeSpots, int carSpots, int truckSpots) {
+    public ParkingFloor(int floorNumber, int bikeSpots, int carSpots, int truckSpots){
         this.floorNumber = floorNumber;
         this.spots = new ArrayList<>();
 
         int spotNumber = 1;
 
-        // Add bike spots
-        for (int i = 0; i < bikeSpots; i++) {
+        for(int i=0; i<bikeSpots; i++){
             spots.add(new ParkingSpot(spotNumber++, VehicleType.BIKE));
         }
 
-        // Add car spots
-        for (int i = 0; i < carSpots; i++) {
-            spots.add(new ParkingSpot(spotNumber++, VehicleType.CAR));
+        for(int i=0; i<carSpots; i++){
+            spots.add(new ParkingSpot(spotNumber++,VehicleType.CAR));
         }
 
-        // Add truck spots
-        for (int i = 0; i < truckSpots; i++) {
-            spots.add(new ParkingSpot(spotNumber++, VehicleType.TRUCK));
+        for(int i=0; i<carSpots; i++){
+            spots.add(new ParkingSpot(spotNumber++,VehicleType.TRUCK));
         }
     }
 
-    public ParkingSpot findAvailableSpot(VehicleType vehicleType) {
-        for (ParkingSpot spot : spots) {
-            if (spot.isAvailable() && spot.canFitVehicle(vehicleType)) {
+    public ParkingSpot findAvailableSpot(VehicleType vehicleType){
+        for(ParkingSpot spot: spots){
+            if(spot.isAvalaible() && spot.canFitVehicle(vehicleType)){
                 return spot;
             }
         }
         return null;
     }
 
-    public boolean parkVehicle(Vehicle vehicle) {
+    public boolean parkVehicle(Vehicle vehicle){
         ParkingSpot spot = findAvailableSpot(vehicle.getType());
-        if (spot != null) {
+        if(spot != null){
             return spot.parkVehicle(vehicle);
         }
         return false;
     }
 
-    public Vehicle unparkVehicle(int spotNumber) {
-        for (ParkingSpot spot : spots) {
-            if (spot.getSpotNumber() == spotNumber) {
+    public Vehicle unparkVehicle(int spotNumber){
+        for(ParkingSpot spot: spots){
+            if(spot.getSpotNumeber() == spotNumber){
                 return spot.unparkVehicle();
             }
         }
         return null;
     }
 
-    public int getAvailableSpots(VehicleType vehicleType) {
+    public int getAvailableSpots(VehicleType vehicleType){
         int count = 0;
-        for (ParkingSpot spot : spots) {
-            if (spot.isAvailable() && spot.canFitVehicle(vehicleType)) {
+        for(ParkingSpot spot: spots){
+            if(spot.isAvalaible() && spot.canFitVehicle(vehicleType)){
                 count++;
             }
         }
         return count;
     }
 
-    public int getFloorNumber() {
+    public int getFloorNumber(){
         return floorNumber;
     }
 
-    public void displayStatus() {
+    public void displayStatus(){
         System.out.println("\n--- Floor " + floorNumber + " ---");
-        System.out.println("Bike spots available: " + getAvailableSpots(VehicleType.BIKE));
         System.out.println("Car spots available: " + getAvailableSpots(VehicleType.CAR));
         System.out.println("Truck spots available: " + getAvailableSpots(VehicleType.TRUCK));
     }
 }
 
-// Main ParkingLot class
 class ParkingLot {
     private String name;
     private ArrayList<ParkingFloor> floors;
@@ -216,9 +211,8 @@ class ParkingLot {
     }
 }
 
-// Main class
-public class MultiStoreyParking {
-    public static void main(String[] args) {
+public class MultiStoreyParking{
+    public static void main(String[] args){
         // Create parking lot with 3 floors
         // Each floor: 10 bike spots, 20 car spots, 5 truck spots
         ParkingLot parkingLot = new ParkingLot("City Center Parking", 3, 10, 20, 5);
